@@ -1,11 +1,12 @@
 # auto-clean-vps
 
-`auto-clean-vps` 是一个面向小型 Linux VPS 的定时清理脚本。当前发布版本为 `auto-clean v8.3`，用于定期清理包管理器缓存、systemd journal、临时目录、旧日志、Docker JSON 日志、用户缓存，以及常见 VPS 跑分工具残留。
+`auto-clean-vps` 是一个面向小型 Linux VPS 的自动化定时清理脚本。当前发布版本为 `auto-clean v8.3`，适合安装到 `/usr/local/bin/auto-clean.sh`，并通过 cron 每月自动运行一次，让服务器定期自动清理包缓存、systemd journal、临时目录、旧日志、Docker JSON 日志、用户缓存，以及常见 VPS 跑分工具残留。
 
-脚本适合放在 `/usr/local/bin/auto-clean.sh`，配合 cron 每月运行一次。
+默认推荐的自动化周期是每月 1 日 05:00。部署后无需手动反复执行，脚本会按 cron 计划定期完成清理，并把运行记录写入 `/var/log/auto-clean.log`。
 
 ## 功能
 
+- 每月自动清理：配合 cron 可按月自动执行，适合长期部署在 VPS 上。
 - 使用 `flock` 防止重复运行。
 - 日志写入 `/var/log/auto-clean.log`，每次结束后只保留最近 300 行。
 - 支持 `apt`、`dnf`、`yum` 缓存清理。
@@ -40,9 +41,9 @@ sudo /usr/local/bin/auto-clean.sh
 sudo tail -n 80 /var/log/auto-clean.log
 ```
 
-## Cron 示例
+## 每月自动清理
 
-每月 1 日 05:00 自动运行：
+推荐添加到 root 用户 crontab，让脚本每月 1 日 05:00 自动运行：
 
 ```cron
 0 5 1 * * /usr/local/bin/auto-clean.sh >/dev/null 2>&1
